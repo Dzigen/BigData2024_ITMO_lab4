@@ -19,12 +19,13 @@ stages:
     params:
     - train.seed
     outs:
-    - data/model.pkl
+    - experiments/model.pkl
 
   evaluate:
     cmd: python src/predict.py
     deps: 
     - src/predict.py
     - data/test_part.csv
-    outs:
-    - data/metrics.json
+    metrics:
+    - experiments/metrics.json:
+        cache: false
