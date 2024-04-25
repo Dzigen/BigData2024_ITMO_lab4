@@ -1,0 +1,26 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/BankNote_Authentication.csv
+      hash: md5
+      md5: e648bb4177bb3738000a7585557c6088
+      size: 46442
+    - path: src/preprocess.py
+      hash: md5
+      md5: 67dedadb6d143ddf9d877c363bad3c66
+      size: 2932
+    params:
+      params.yaml:
+        prepare.seed: 2
+        prepare.train_size: 0.8
+    outs:
+    - path: data/test_part.csv
+      hash: md5
+      md5: 5909bfbe58b1cca3da4c75688f6d7e7a
+      size: 9087
+    - path: data/train_part.csv
+      hash: md5
+      md5: d8f0b9f1a16fd119ec0d30defd3a1cdc
+      size: 36027

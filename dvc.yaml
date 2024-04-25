@@ -5,7 +5,7 @@ stages:
     - src/preprocess.py
     - data/BankNote_Authentication.csv
     params:
-    - prepare.split
+    - prepare.train_size
     - prepare.seed
     outs:
     - data/train_part.csv
@@ -24,6 +24,7 @@ stages:
   evaluate:
     cmd: python src/predict.py
     deps: 
+    - experiments/model.pkl
     - src/predict.py
     - data/test_part.csv
     metrics:
