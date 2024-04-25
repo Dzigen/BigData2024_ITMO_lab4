@@ -4,6 +4,9 @@ from typing import Tuple, List, Union
 import typing_extensions
 
 from utils import get_params_config
+from logger import Logger
+
+SHOW_LOG = True
 
 class Preparator:
     """_summary_
@@ -21,6 +24,11 @@ class Preparator:
         self.seed = seed
         self.save_dir = save_dir
 
+        logger = Logger(SHOW_LOG)
+        self.log = logger.get_logger(__name__)
+
+        self.log.info("Initiating Preparator-class")
+
 
     def split(self, dataset_path: str, y_label='class', 
               train_savep: Union[None, str]=None, test_savep: Union[None, str]=None) -> Tuple[pd.DataFrame, pd.DataFrame, 
@@ -37,11 +45,13 @@ class Preparator:
             Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]: _description_
         """        
 
+        self.log.info("Loading dataset")
         dataset: pd.DataFrame = pd.read_csv(dataset_path, sep=',')
         
         target_col: List[str] = [y_label]
         features_cols: List[str] = list(set(dataset.columns).difference(target_col))
 
+        self.log.info("Spliting dataset on train/test parts")
         X_train, X_test, y_train, y_test = train_test_split(
             dataset[features_cols], dataset[target_col], 
             train_size=self.train_s, random_state=self.seed,
@@ -49,10 +59,12 @@ class Preparator:
             shuffle=True)
         
         if train_savep is not None:
+            self.log.info("Saving train part")
             train_part: pd.DataFrame = pd.concat([X_train, y_train], axis=1).reset_index(drop=True)
             train_part.to_csv(f"{self.save_dir}/{train_savep}", index=False)
 
         if test_savep is not None:
+            self.log.info("Saving test part")
             test_part: pd.DataFrame = pd.concat([X_test, y_test], axis=1).reset_index(drop=True)
             test_part.to_csv(f"{self.save_dir}/{test_savep}", index=False)
 
