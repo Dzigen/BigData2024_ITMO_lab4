@@ -1,0 +1,30 @@
+stages:
+  prepare:
+    cmd: python src/preprocess.py
+    deps:
+    - src/preprocess.py
+    - data/BankNote_Authentication.csv
+    params:
+    - prepare.split
+    - prepare.seed
+    outs:
+    - data/train_part.csv
+    - data/test_part.csv
+  
+  train:
+    cmd: python src/train.py
+    deps:
+    - src/train.py
+    - data/train_part.csv
+    params:
+    - train.seed
+    outs:
+    - data/model.pkl
+
+  evaluate:
+    cmd: python src/predict.py
+    deps: 
+    - src/predict.py
+    - data/test_part.csv
+    outs:
+    - data/metrics.json

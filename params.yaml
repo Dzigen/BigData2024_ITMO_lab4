@@ -1,0 +1,6 @@
+prepare:
+  split: 0.8
+  seed: 2
+
+train:
+  seed: 2
