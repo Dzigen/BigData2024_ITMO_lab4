@@ -19,7 +19,12 @@ def get_params_config(params_path: str='params.yaml') -> ConfigBox:
     """    
     return ConfigBox(yaml.load(open(params_path, encoding="utf-8")))
 
-def cls_se_log(info):
+def cls_se_log(info: str):
+    """Декаратор с аргументами для логирования старта и завершения работы вложенного метода
+
+    Args:
+        info (str): _description_
+    """
     def wrap(func):
         @functools.wraps(func)
         def wrapped_f(self, *args, **kwargs):

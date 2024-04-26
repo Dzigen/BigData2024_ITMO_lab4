@@ -1,7 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 from dataclasses import dataclass
-from typing import Union, List
+from typing import Union, List, Dict
 import pandas as pd
 import inspect
 import json
@@ -13,7 +13,15 @@ from utils import cls_se_log, get_params_config, load_data
 SHOW_LOG = True
 
 class Evaluator:
+    """_summary_
+    """
+
     def __init__(self, model_path: Union[str, None]=None) -> None:
+        """_summary_
+
+        Args:
+            model_path (Union[str, None], optional): _description_. Defaults to None.
+        """
         logger = Logger(SHOW_LOG)
         self.log = logger.get_logger(__name__)
         self.log.info("Initiating Evaluator-class")
@@ -25,11 +33,32 @@ class Evaluator:
     def load_model(self, model_path):
         self.model = joblib.load(model_path)
     
-    @cls_se_log(info="Evaluating model")
-    def predict(self, inputs: List[List[float]], targets: List[float], save_path: Union[str,None] = None) -> dict[str, float]:
-        
-        predictions = self.model.predict(inputs)
+    @cls_se_log(info="Predicting labels by trained model")
+    def predict(self, inputs: List[List[float]]) -> List[int]:
+        """_summary_
 
+        Args:
+            inputs (List[List[float]]): _description_
+
+        Returns:
+            List[int]: _description_
+        """
+        predictions = self.model.predict(inputs).tolist()
+
+        return predictions
+    
+    @cls_se_log(info="Compute scores")
+    def compute_scores(self, targets: List[float], predictions: List[float], save_path: str=None) -> Dict[str, float]:
+        """_summary_
+
+        Args:
+            targets (List[float]): _description_
+            predictions (List[float]): _description_
+            save_path (str, optional): _description_. Defaults to None.
+
+        Returns:
+            Dict[str, float]: _description_
+        """
         metrics = {
             'roc_auc': roc_auc_score(targets, predictions),
             'accuracy': accuracy_score(targets, predictions),
@@ -54,4 +83,5 @@ if __name__ == "__main__":
     evaluator = Evaluator(MODEL_PATH)
     inputs, targets = load_data(TEST_PATH)
 
-    metrics = evaluator.predict(inputs, targets, save_path=METRICS_SAVE_PATH)
+    predictions = evaluator.predict(inputs)
+    metrics = evaluator.compute_scores(targets, predictions, save_path=METRICS_SAVE_PATH)
