@@ -8,14 +8,14 @@ stages:
     - prepare.train_size
     - prepare.seed
     outs:
-    - data/train_part.csv
-    - data/test_part.csv
+    - experiments/train_part.csv
+    - experiments/test_part.csv
   
   train:
     cmd: python src/train.py
     deps:
     - src/train.py
-    - data/train_part.csv
+    - experiments/train_part.csv
     params:
     - train.n_estimators
     - train.criterion
@@ -42,7 +42,7 @@ stages:
     deps: 
     - experiments/model.pkl
     - src/predict.py
-    - data/test_part.csv
+    - experiments/test_part.csv
     metrics:
     - experiments/metrics.json:
         cache: false

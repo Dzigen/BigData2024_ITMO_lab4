@@ -72,7 +72,7 @@ class Preparator:
         
 if __name__ == "__main__":
     PARAMS_YAML_FILE = "./params.yaml"
-    SAVE_DIR = "./data"
+    SAVE_DIR = "./experiments"
     DATASET_PATH = "./data/BankNote_Authentication.csv"
     TRAIN_SAVE_FILE = "train_part.csv"
     TEST_SAVE_FILE = "test_part.csv"

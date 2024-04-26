@@ -9,27 +9,27 @@ stages:
       size: 46442
     - path: src/preprocess.py
       hash: md5
-      md5: b0803009c3b5a81c5930cf0dd4bf1108
-      size: 4238
+      md5: 7caa056d4ae89913cacc3be87f2e7d56
+      size: 4245
     params:
       params.yaml:
         prepare.seed: 2
         prepare.train_size: 0.8
     outs:
-    - path: data/test_part.csv
+    - path: experiments/test_part.csv
       hash: md5
-      md5: bf46d18c7a49ec68266df6e1c6786ecb
+      md5: ffa0aa301f4116d0341ddb3f0136cf43
       size: 9087
-    - path: data/train_part.csv
+    - path: experiments/train_part.csv
       hash: md5
-      md5: a46c1a259b5b3d52c75aba0d2dd3f24c
+      md5: 6d4d899ce10528b98d0e59af8bc6007f
       size: 36027
   train:
     cmd: python src/train.py
     deps:
-    - path: data/train_part.csv
+    - path: experiments/train_part.csv
       hash: md5
-      md5: a46c1a259b5b3d52c75aba0d2dd3f24c
+      md5: 6d4d899ce10528b98d0e59af8bc6007f
       size: 36027
     - path: src/train.py
       hash: md5
@@ -57,25 +57,25 @@ stages:
     outs:
     - path: experiments/model.pkl
       hash: md5
-      md5: f3f98d2ab811fbc05c6d6c8ed0e31b71
-      size: 1302425
+      md5: 7fa3d8736b13723739056276ded537dd
+      size: 1316665
   evaluate:
     cmd: python src/predict.py
     deps:
-    - path: data/test_part.csv
-      hash: md5
-      md5: bf46d18c7a49ec68266df6e1c6786ecb
-      size: 9087
     - path: experiments/model.pkl
       hash: md5
-      md5: f3f98d2ab811fbc05c6d6c8ed0e31b71
-      size: 1302425
+      md5: 7fa3d8736b13723739056276ded537dd
+      size: 1316665
+    - path: experiments/test_part.csv
+      hash: md5
+      md5: ffa0aa301f4116d0341ddb3f0136cf43
+      size: 9087
     - path: src/predict.py
       hash: md5
-      md5: da214648937106b41794a40333eceb12
-      size: 1990
+      md5: 84f222238828ffc6436c472b76a3c23f
+      size: 2797
     outs:
     - path: experiments/metrics.json
       hash: md5
-      md5: b0b7c9a3aea8dea1991d839489185930
-      size: 171
+      md5: 8e9d69ec1cd326285eb9986e7c8156d0
+      size: 169
