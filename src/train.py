@@ -6,7 +6,7 @@ import pandas as pd
 import inspect
 
 from logger import Logger
-from utils import cls_se_log, get_params_config
+from utils import cls_se_log, get_params_config, load_data
 
 SHOW_LOG = True
 
@@ -54,27 +54,10 @@ class Trainer:
 
         self.config = config 
         self.model = RandomForestClassifier(**config.__dict__)
-
-    @cls_se_log(info="Load/formate train dataset")
-    def load_data(self, train_path: str, y_label: str="class") -> None:
-        """_summary_
-
-        Args:
-            train_path (str): _description_
-            y_label (str, optional): _description_. Defaults to "class".
-        """
-        data = pd.read_csv(train_path, sep=',')
-        self.log.info(f"Train dataset size: {data.shape}")
-
-        target_col = [y_label]
-        features_cols = list(set(data.columns).difference(target_col))
-
-        self.inputs = data[features_cols].values.tolist()
-        self.targets = data[target_col].values.ravel().tolist()
         
 
     @cls_se_log(info="Model training")
-    def train(self, verbose: int=0, n_jobs: Union[None, int]=None) -> None:
+    def train(self, inputs, targets, verbose: int=0, n_jobs: Union[None, int]=None) -> None:
         """_summary_
 
         Args:
@@ -84,7 +67,7 @@ class Trainer:
         self.model.verbose = verbose
         self.model.n_jobs = n_jobs
         
-        self.model.fit(self.inputs, self.targets)
+        self.model.fit(inputs, targets)
 
     @cls_se_log(info="Saving model")
     def save(self, save_file: str) -> None:
@@ -105,7 +88,7 @@ if __name__ == "__main__":
     rf_config = RandomForestConfig.from_dict(params.train.to_dict())
 
     trainer = Trainer(rf_config)
-    trainer.load_data(TRAIN_PATH)
+    inputs, targets = load_data(TRAIN_PATH)
 
-    trainer.train(verbose=params.train.verbose, n_jobs=params.train.n_jobs)
+    trainer.train(inputs, targets, verbose=params.train.verbose, n_jobs=params.train.n_jobs)
     trainer.save(MODEL_SAVE_PATH)
