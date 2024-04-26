@@ -17,7 +17,23 @@ stages:
     - src/train.py
     - data/train_part.csv
     params:
-    - train.seed
+    - train.n_estimators
+    - train.criterion
+    - train.max_depth
+    - train.min_samples_split
+    - train.min_samples_leaf
+    - train.min_weight_fraction_leaf
+    - train.max_features
+    - train.max_leaf_nodes
+    - train.min_impurity_decrease
+    - train.bootstrap
+    - train.oob_score
+    - train.random_state
+    - train.warm_start
+    - train.class_weight
+    - train.ccp_alpha
+    - train.max_samples
+    - train.monotonic_cst
     outs:
     - experiments/model.pkl
 

@@ -9,8 +9,8 @@ stages:
       size: 46442
     - path: src/preprocess.py
       hash: md5
-      md5: 67dedadb6d143ddf9d877c363bad3c66
-      size: 2932
+      md5: b735f8a98fc5bbe41ba50e0f92b0e689
+      size: 4238
     params:
       params.yaml:
         prepare.seed: 2
@@ -18,9 +18,44 @@ stages:
     outs:
     - path: data/test_part.csv
       hash: md5
-      md5: 5909bfbe58b1cca3da4c75688f6d7e7a
+      md5: 7975ba3ef4d6646c4d3cd8ae75e03430
       size: 9087
     - path: data/train_part.csv
       hash: md5
-      md5: d8f0b9f1a16fd119ec0d30defd3a1cdc
+      md5: cdf6d5e2d750f4b8875e1855fea4a186
       size: 36027
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/train_part.csv
+      hash: md5
+      md5: cdf6d5e2d750f4b8875e1855fea4a186
+      size: 36027
+    - path: src/train.py
+      hash: md5
+      md5: 7c19661e6073bfe550bc6fa2c12d88b5
+      size: 3316
+    params:
+      params.yaml:
+        train.bootstrap: true
+        train.ccp_alpha: 0.0
+        train.class_weight:
+        train.criterion: gini
+        train.max_depth:
+        train.max_features: sqrt
+        train.max_leaf_nodes:
+        train.max_samples:
+        train.min_impurity_decrease: 0.0
+        train.min_samples_leaf: 1
+        train.min_samples_split: 2
+        train.min_weight_fraction_leaf: 0.0
+        train.monotonic_cst:
+        train.n_estimators: 300
+        train.oob_score: false
+        train.random_state:
+        train.warm_start: false
+    outs:
+    - path: experiments/model.pkl
+      hash: md5
+      md5: 693ebb5e18f19202d392d69270828c25
+      size: 1312185
