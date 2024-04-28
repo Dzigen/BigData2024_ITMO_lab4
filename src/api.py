@@ -5,10 +5,13 @@ from pydantic import BaseModel
 
 PROD_MODEL_PATH = '../models/prod_model.pkl'
 
+
 class Body(BaseModel):
     inputs: List[List[float]]
 
+
 app = FastAPI()
+
 
 @app.post("/make_predictions/")
 async def predict(body: Body):

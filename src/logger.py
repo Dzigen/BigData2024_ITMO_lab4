@@ -61,7 +61,7 @@ class Logger:
         logger.addHandler(self.get_file_handler())
         logger.propagate = False
         return logger
-    
+
     @staticmethod
     def cls_se_log(info: str):
         """Декаратор с аргументами для логирования старта и завершения работы вложенного метода
@@ -78,6 +78,7 @@ class Logger:
                 return value
             return wrapped_f
         return wrap
+
 
 if __name__ == "__main__":
     pass

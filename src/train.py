@@ -10,6 +10,7 @@ from utils import BaseUtils
 
 SHOW_LOG = True
 
+
 @dataclass
 class RandomForestConfig:
     """_summary_
@@ -33,15 +34,17 @@ class RandomForestConfig:
     monotonic_cst: Union[None, List[int]] = None
 
     @classmethod
-    def from_dict(cls, dict_config):      
+    def from_dict(cls, dict_config):
         return cls(**{
-            k: v for k, v in dict_config.items() 
+            k: v for k, v in dict_config.items()
             if k in inspect.signature(cls).parameters
         })
+
 
 class Trainer(BaseUtils):
     """_summary_
     """
+
     def __init__(self, config: RandomForestConfig) -> None:
         """_summary_
 
@@ -54,12 +57,11 @@ class Trainer(BaseUtils):
         self.log = logger.get_logger(__name__)
         self.log.info("Initiating Trainer-class")
 
-        self.config = config 
+        self.config = config
         self.model = RandomForestClassifier(**config.__dict__)
-        
 
     @Logger.cls_se_log(info="Model training")
-    def train(self, inputs, targets, verbose: int=0, n_jobs: Union[None, int]=None) -> None:
+    def train(self, inputs, targets, verbose: int = 0, n_jobs: Union[None, int] = None) -> None:
         """_summary_
 
         Args:
@@ -68,7 +70,7 @@ class Trainer(BaseUtils):
         """
         self.model.verbose = verbose
         self.model.n_jobs = n_jobs
-        
+
         self.model.fit(inputs, targets)
 
     @Logger.cls_se_log(info="Saving model")
@@ -79,7 +81,7 @@ class Trainer(BaseUtils):
             save_file (str): _description_
         """
         joblib.dump(self.model, save_file)
-        
+
 
 if __name__ == "__main__":
     PARAMS_YAML_PATH = "./params.yaml"
@@ -92,5 +94,6 @@ if __name__ == "__main__":
     trainer = Trainer(rf_config)
     inputs, targets = trainer.load_data(TRAIN_PATH)
 
-    trainer.train(inputs, targets, verbose=params.train.verbose, n_jobs=params.train.n_jobs)
+    trainer.train(inputs, targets, verbose=params.train.verbose,
+                  n_jobs=params.train.n_jobs)
     trainer.save(MODEL_SAVE_PATH)

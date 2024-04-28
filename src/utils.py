@@ -30,7 +30,7 @@ class BaseUtils:
 
         Args:
             train_path (str): _description_
-            y_label (_type_): _description_
+            y_label (str): _description_
 
         Returns:
             Tuple[List[List[float]],List[int]]: _description_
