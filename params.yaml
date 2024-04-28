@@ -3,7 +3,7 @@ prepare:
   seed: 2
 
 train:
-    n_estimators: 300
+    n_estimators: 400
     criterion: 'gini'
     max_depth: null
     min_samples_split:  2

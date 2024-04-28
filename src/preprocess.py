@@ -4,11 +4,11 @@ from typing import Tuple, List, Union
 import typing_extensions
 
 from logger import Logger
-from utils import cls_se_log, get_params_config
+from utils import BaseUtils
 
 SHOW_LOG = True
 
-class Preparator:
+class Preparator(BaseUtils):
     """Класс предобработки датасетов
     """    
 
@@ -28,7 +28,7 @@ class Preparator:
         self.seed = seed
         self.save_dir = save_dir
 
-    @cls_se_log(info="Split dataset on train/test parts")
+    @Logger.cls_se_log(info="Split dataset on train/test parts")
     def split(self, dataset_path: str, y_label='class', 
               train_savep: Union[None, str]=None, test_savep: Union[None, str]=None) -> Tuple[pd.DataFrame, pd.DataFrame, 
                                                                                               pd.DataFrame, pd.DataFrame]:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     TRAIN_SAVE_FILE = "train_part.csv"
     TEST_SAVE_FILE = "test_part.csv"
 
-    params = get_params_config(params_path=PARAMS_YAML_FILE)
+    params = Preparator.get_params_config(params_path=PARAMS_YAML_FILE)
     train_size = params.prepare.train_size
     seed = params.prepare.seed
 

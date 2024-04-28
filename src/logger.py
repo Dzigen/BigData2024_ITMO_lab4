@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import functools
 
 FORMATTER = logging.Formatter(
     "%(asctime)s — %(name)s — %(levelname)s — %(message)s")
@@ -60,6 +61,23 @@ class Logger:
         logger.addHandler(self.get_file_handler())
         logger.propagate = False
         return logger
+    
+    @staticmethod
+    def cls_se_log(info: str):
+        """Декаратор с аргументами для логирования старта и завершения работы вложенного метода
+
+        Args:
+            info (str): _description_
+        """
+        def wrap(func):
+            @functools.wraps(func)
+            def wrapped_f(self, *args, **kwargs):
+                self.log.info('START_METHOD: ' + info)
+                value = func(self, *args, **kwargs)
+                self.log.info('END_METHOD: ' + info)
+                return value
+            return wrapped_f
+        return wrap
 
 if __name__ == "__main__":
     pass

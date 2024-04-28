@@ -8,11 +8,11 @@ import json
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, recall_score, precision_score
 
 from logger import Logger
-from utils import cls_se_log, get_params_config, load_data
+from utils import BaseUtils
 
 SHOW_LOG = True
 
-class Evaluator:
+class Evaluator(BaseUtils):
     """_summary_
     """
 
@@ -22,6 +22,8 @@ class Evaluator:
         Args:
             model_path (Union[str, None], optional): _description_. Defaults to None.
         """
+        super(Evaluator, self).__init__()
+
         logger = Logger(SHOW_LOG)
         self.log = logger.get_logger(__name__)
         self.log.info("Initiating Evaluator-class")
@@ -29,11 +31,11 @@ class Evaluator:
         if model_path is not None:
             self.load_model(model_path)
 
-    @cls_se_log(info="Load model")
+    @Logger.cls_se_log(info="Load model")
     def load_model(self, model_path):
         self.model = joblib.load(model_path)
     
-    @cls_se_log(info="Predicting labels by trained model")
+    @Logger.cls_se_log(info="Predicting labels by trained model")
     def predict(self, inputs: List[List[float]]) -> List[int]:
         """_summary_
 
@@ -47,7 +49,7 @@ class Evaluator:
 
         return predictions
     
-    @cls_se_log(info="Compute scores")
+    @Logger.cls_se_log(info="Compute scores")
     def compute_scores(self, targets: List[float], predictions: List[float], save_path: str=None) -> Dict[str, float]:
         """_summary_
 
@@ -76,12 +78,11 @@ class Evaluator:
 if __name__ == "__main__":
     PARAMS_YAML_PATH = './params.yaml'
     MODEL_PATH = './experiments/model.pkl'
-    TEST_PATH = './data/test_part.csv'
+    TEST_PATH = './experiments/test_part.csv'
     METRICS_SAVE_PATH = './experiments/metrics.json'
 
-    params = get_params_config(params_path=PARAMS_YAML_PATH)
     evaluator = Evaluator(MODEL_PATH)
-    inputs, targets = load_data(TEST_PATH)
+    inputs, targets = evaluator.load_data(TEST_PATH)
 
     predictions = evaluator.predict(inputs)
     metrics = evaluator.compute_scores(targets, predictions, save_path=METRICS_SAVE_PATH)

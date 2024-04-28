@@ -6,7 +6,7 @@ import pandas as pd
 import inspect
 
 from logger import Logger
-from utils import cls_se_log, get_params_config, load_data
+from utils import BaseUtils
 
 SHOW_LOG = True
 
@@ -39,7 +39,7 @@ class RandomForestConfig:
             if k in inspect.signature(cls).parameters
         })
 
-class Trainer:
+class Trainer(BaseUtils):
     """_summary_
     """
     def __init__(self, config: RandomForestConfig) -> None:
@@ -48,6 +48,8 @@ class Trainer:
         Args:
             config (RandomForestConfig): _description_
         """
+        super(Trainer, self).__init__()
+
         logger = Logger(SHOW_LOG)
         self.log = logger.get_logger(__name__)
         self.log.info("Initiating Trainer-class")
@@ -56,7 +58,7 @@ class Trainer:
         self.model = RandomForestClassifier(**config.__dict__)
         
 
-    @cls_se_log(info="Model training")
+    @Logger.cls_se_log(info="Model training")
     def train(self, inputs, targets, verbose: int=0, n_jobs: Union[None, int]=None) -> None:
         """_summary_
 
@@ -69,7 +71,7 @@ class Trainer:
         
         self.model.fit(inputs, targets)
 
-    @cls_se_log(info="Saving model")
+    @Logger.cls_se_log(info="Saving model")
     def save(self, save_file: str) -> None:
         """_summary_
 
@@ -81,14 +83,14 @@ class Trainer:
 
 if __name__ == "__main__":
     PARAMS_YAML_PATH = "./params.yaml"
-    TRAIN_PATH = './data/train_part.csv'
+    TRAIN_PATH = './experiments/train_part.csv'
     MODEL_SAVE_PATH = './experiments/model.pkl'
 
-    params = get_params_config(params_path=PARAMS_YAML_PATH)
+    params = Trainer.get_params_config(params_path=PARAMS_YAML_PATH)
     rf_config = RandomForestConfig.from_dict(params.train.to_dict())
 
     trainer = Trainer(rf_config)
-    inputs, targets = load_data(TRAIN_PATH)
+    inputs, targets = trainer.load_data(TRAIN_PATH)
 
     trainer.train(inputs, targets, verbose=params.train.verbose, n_jobs=params.train.n_jobs)
     trainer.save(MODEL_SAVE_PATH)
