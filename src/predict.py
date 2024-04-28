@@ -7,8 +7,8 @@ import inspect
 import json
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score, recall_score, precision_score
 
-from logger import Logger
-from utils import BaseUtils
+from src.logger import Logger
+from src.utils import BaseUtils
 
 SHOW_LOG = True
 

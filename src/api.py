@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from predict import Evaluator
 from typing import List
 from pydantic import BaseModel
+
+from src.predict import Evaluator
 
 PROD_MODEL_PATH = '../models/prod_model.pkl'
 

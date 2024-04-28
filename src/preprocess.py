@@ -3,8 +3,8 @@ import pandas as pd
 from typing import Tuple, List, Union
 import typing_extensions
 
-from logger import Logger
-from utils import BaseUtils
+from src.logger import Logger
+from src.utils import BaseUtils
 
 SHOW_LOG = True
 

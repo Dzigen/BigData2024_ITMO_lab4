@@ -5,8 +5,8 @@ from typing import Union, List
 import pandas as pd
 import inspect
 
-from logger import Logger
-from utils import BaseUtils
+from src.logger import Logger
+from src.utils import BaseUtils
 
 SHOW_LOG = True
 
