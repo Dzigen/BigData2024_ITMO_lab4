@@ -1,15 +1,27 @@
 pipeline {
     agent any
 
-    environment {
-        GIT_SSH_KEY = credentials('github_bigdata2024_itmo')  // ID of the SSH key added in Jenkins credentials
-        GIT_REPO_URI = "git@github.com:Dzigen/BigData2024_ITMO_lab1.git" 
-    }
-
     stages {
-        stage('Checkout from GitHub') {
+        stage('unit-testing') {
             steps {
                 script {
+                    echo "Stage 1!"
+                    ls -la
+                }
+            }
+        }
+        stage('building') {
+            steps {
+                script {
+                    echo "Stage 2!"
+                    ls -la
+                }
+            }
+        }
+        stage('pushing to dockerhub') {
+            steps {
+                script {
+                    echo "Stage 3!"
                     ls -la
                 }
             }
