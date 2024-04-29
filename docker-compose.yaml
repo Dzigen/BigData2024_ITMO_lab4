@@ -11,12 +11,16 @@ services:
       - ./model_api.log:/home/app/src/logfile.log
 
   jenkins:
-    image: jenkins/jenkins
+    image: jenkins_with_dockercli:v1
+    build: ./jenkins_with_dockercli
     ports:
       - 8080:8080
       - 50000:50000
     user: root
+    group_add:
+      - 0
     volumes:
       - /home/dzigen/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true # docker run -i
     tty: true        # docker run -t
