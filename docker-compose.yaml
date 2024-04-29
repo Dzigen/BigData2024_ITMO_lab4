@@ -9,6 +9,7 @@ services:
     build: .
     ports:
       - 4567:4567
+    command: touch model_api.log
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     volumes: 

@@ -14,6 +14,5 @@ RUN pytest
 RUN rm -rf tests
 
 WORKDIR "${APP_DIR}/src/"
-RUN touch logfile.log
 
 CMD ["sh", "-c", "uvicorn api:app --reload --host 0.0.0.0 --port 4567"]
