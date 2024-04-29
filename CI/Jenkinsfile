@@ -25,7 +25,7 @@ pipeline {
                 sh 'docker --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'docker-compose build model_api'
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose build model_api'
             }
         }
         stage('Run Unit-test') {
