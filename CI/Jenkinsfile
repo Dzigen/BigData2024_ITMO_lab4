@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Cloning github-repository'){
             steps{
+                echo "====[STAGE1]===="
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
                 sh 'cd BigData2024_ITMO_lab1'
@@ -20,21 +21,21 @@ pipeline {
         
         stage('Building ModelAPI-image') {
             steps {
+                echo "====[STAGE2]===="
                 sh 'docker --version'
-                sh 'docker login -u $DOCKERHUB_CREDS_USR -p $DOCKERHUB_CREDS_PSW$'
+                sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-               // sh 'docker-compose build model_api'
+                sh 'docker-compose build model_api'
             }
         }
         stage('Run Unit-test') {
             steps {
-                echo "Stage 1!"
-                echo "Hello World again!"
+                echo "====[STAGE3]===="
             }
         }
         stage('Push ModelAPI-image to DockerHub') {
             steps {
-                echo "Stage 3!"
+                echo "====[STAGE4]===="
             }
         }
     }
@@ -42,6 +43,7 @@ pipeline {
     post {
         always {
             sh 'docker logout'
+            sh 'kill $SSH_AGENT_PID'
         }
     }
 }        
