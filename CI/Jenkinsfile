@@ -12,15 +12,17 @@ pipeline {
         stage('Cloning github-repository'){
             steps{
                 cleanWs()
-                sh 'git clone -b main https://github.com/IcyAltair/mle-template.git'
-                sh 'ls -la'
+                sh 'git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'
+                sh 'cd BigData2024_ITMO_lab1'
             }
         }
         
         stage('Building ModelAPI-image') {
             steps {
-                echo "Stage 2!"
                 sh 'docker --version'
+                sh 'docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'
+                sh 'docker pull dzigen/base_model_api:v1'
+               // sh 'docker-compose build model_api'
             }
         }
         stage('Run Unit-test') {
@@ -33,6 +35,12 @@ pipeline {
             steps {
                 echo "Stage 3!"
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout'
         }
     }
 }        

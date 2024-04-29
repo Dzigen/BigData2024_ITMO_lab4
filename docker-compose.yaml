@@ -1,5 +1,9 @@
 version: '3'
 services:
+  base_model_api:
+    image: dzigen/base_model_api:v1
+    build: ./docker_images/base_modelapi
+
   model_api:
     image: dzigen/model_api:v1
     build: .
@@ -12,7 +16,7 @@ services:
 
   jenkins:
     image: jenkins_with_dockercli:v1
-    build: ./jenkins_with_dockercli
+    build: ./docker_images/jenkins_with_dockercli
     ports:
       - 8080:8080
       - 50000:50000
