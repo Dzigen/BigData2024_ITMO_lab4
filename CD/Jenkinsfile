@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDS=credentials('dockerhub_creds')
+        LC_ALL = "en_US.UTF-8"
+        LANG    = "en_US.UTF-8"
+        LANGUAGE = "en_US.UTF-8"
+        GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
+    }
+
+    stages {
+        stage('Cloning github-repository'){
+            steps{
+                echo "====[STAGE1]===="
+                cleanWs()
+                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
+                sh 'cd BigData2024_ITMO_lab1'
+            }
+        }
+        
+        stage('Pull/run built image') {
+            steps {
+                echo "====[STAGE2]===="
+                sh 'docker --version'
+                sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
+                sh 'docker pull dzigen/model_api:v1'
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose run -d model_api'
+            }
+        }
+
+        stage('Run func-tests') {
+            steps {
+                echo "====[STAGE3]===="
+                sh 'cd BigData2024_ITMO_lab1 && pytest tests/functional'
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker stop model_api && docker logout'
+        }
+    }
+}   

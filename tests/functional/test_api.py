@@ -4,7 +4,7 @@ import json
 
 TEST_BODIES = [{'inputs': [[1,2,3,4]]}]
 TEST_RESPONSES = [{'predictions': [0]}]
-URL = "http://127.0.0.1:8000/make_predictions/"
+URL = "http://127.0.0.1:4567/make_predictions/"
 
 @pytest.mark.parametrize("body,expected_code,expected_response", [
     (TEST_BODIES[0], 200, TEST_RESPONSES[0])
