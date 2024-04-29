@@ -28,14 +28,11 @@ pipeline {
                 sh 'cd BigData2024_ITMO_lab1 && docker-compose build model_api'
             }
         }
-        stage('Run Unit-test') {
-            steps {
-                echo "====[STAGE3]===="
-            }
-        }
+
         stage('Push ModelAPI-image to DockerHub') {
             steps {
                 echo "====[STAGE4]===="
+                sh 'docker push dzigen/model_api:v1'
             }
         }
     }
