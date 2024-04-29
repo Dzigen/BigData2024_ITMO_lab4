@@ -10,8 +10,7 @@ pipeline {
         stage('Checkout from GitHub') {
             steps {
                 script {
-                    // Define custom GIT SSH command
-                    sh "ssh-agent bash -c 'ssh-add ${GIT_SSH_KEY}; git clone ${GIT_REPO_URI}'"
+                    ls -la
                 }
             }
         }
