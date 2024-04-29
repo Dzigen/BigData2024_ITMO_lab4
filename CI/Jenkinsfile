@@ -43,7 +43,6 @@ pipeline {
     post {
         always {
             sh 'docker logout'
-            sh 'kill $SSH_AGENT_PID'
         }
     }
 }        
