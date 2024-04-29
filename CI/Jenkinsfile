@@ -6,13 +6,14 @@ pipeline {
         LC_ALL = "en_US.UTF-8"
         LANG    = "en_US.UTF-8"
         LANGUAGE = "en_US.UTF-8"
+        GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
     }
 
     stages {
         stage('Cloning github-repository'){
             steps{
                 cleanWs()
-                sh 'git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'
+                sh "ssh-agent bash -c 'ssh-add ${GITHUB_SSH_CREDS}; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
                 sh 'cd BigData2024_ITMO_lab1'
             }
         }
