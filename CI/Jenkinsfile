@@ -13,7 +13,7 @@ pipeline {
         stage('Cloning github-repository'){
             steps{
                 cleanWs()
-                sh "ssh-agent bash -c 'ssh-add ${GITHUB_SSH_CREDS}; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
+                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
                 sh 'cd BigData2024_ITMO_lab1'
             }
         }
@@ -21,7 +21,7 @@ pipeline {
         stage('Building ModelAPI-image') {
             steps {
                 sh 'docker --version'
-                sh 'docker login -u %DOCKERHUB_CREDS_USR% -p %DOCKERHUB_CREDS_PSW%'
+                sh 'docker login -u $DOCKERHUB_CREDS_USR -p $DOCKERHUB_CREDS_PSW$'
                 sh 'docker pull dzigen/base_model_api:v1'
                // sh 'docker-compose build model_api'
             }
