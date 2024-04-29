@@ -1,0 +1,22 @@
+version: '3'
+services:
+  model_api:
+    image: dzigen/model_api:v1
+    build: .
+    ports:
+      - 4567:4567
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes: 
+      - ./model_api.log:/home/app/src/logfile.log
+
+  jenkins:
+    image: jenkins/jenkins
+    ports:
+      - 8080:8080
+      - 50000:50000
+    user: root
+    volumes:
+      - /home/dzigen/jenkins:/var/jenkins_home
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

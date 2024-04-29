@@ -13,7 +13,6 @@ class Body(BaseModel):
 
 app = FastAPI()
 
-
 @app.post("/make_predictions/")
 async def predict(body: Body):
     evaluator = Evaluator(PROD_MODEL_PATH)
