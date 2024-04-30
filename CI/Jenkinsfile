@@ -25,14 +25,14 @@ pipeline {
                 sh 'docker --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'cd BigData2024_ITMO_lab1 && docker-compose build --no-cache model_api'
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose build --no-cache modelapi'
             }
         }
 
         stage('Test run of ModelAPI-image') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose run -d model_api'
+                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose run -d modelapi'
             }
         }
 

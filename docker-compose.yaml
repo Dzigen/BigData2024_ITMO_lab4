@@ -1,10 +1,10 @@
 version: '3'
 services:
-  base_model_api:
+  base_modelapi:
     image: dzigen/base_model_api:v1
     build: ./docker_images/base_model_api
 
-  model_api:
+  modelapi:
     image: dzigen/model_api:v1
     build: .
     container_name: model_api
@@ -35,7 +35,7 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
-  test_model_api:
+  test_modelapi:
     image: dzigen/test_model_api:v1
     build: ./docker_images/test_model_api
     container_name: test_model_api
