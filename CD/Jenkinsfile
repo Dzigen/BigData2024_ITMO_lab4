@@ -19,27 +19,35 @@ pipeline {
             }
         }
         
-        stage('Pull/run built image') {
+        stage('Pull prod-image and env-image for tests') {
             steps {
                 echo "====[STAGE2]===="
                 sh 'docker --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/model_api:v1'
-                sh 'cd BigData2024_ITMO_lab1 && touch model_api.log && docker-compose run -d model_api'
+                sh 'docker pull dzigen/base_model_api:v1'
+            }
+        }
+
+        stage('Build tests-image') {
+            steps {
+                echo "====[STAGE3]===="
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose build test_model_api'
             }
         }
 
         stage('Run func-tests') {
             steps {
-                echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab1 && pytest tests/functional'
+                echo "====[STAGE4]===="
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose run -d test_model_api'
             }
         }
+
     }
 
     post {
         always {
-            sh 'docker stop model_api && docker logout'
+            sh 'docker stop model_api test_model_api && docker rm model_api test_model_api && docker logout'
         }
     }
 }   
