@@ -5,8 +5,8 @@ services:
     build: ./docker_images/base_modelapi
 
   model_api:
-    container_name: modelapi
-    hostname: modelapi
+    container_name: model_api
+    hostname: model_api
     image: dzigen/model_api:v1
     build: .
     ports:
@@ -19,8 +19,8 @@ services:
         target: /home/app/src/logfile.log
 
   jenkins:
-    container_name: my_jenkins
-    hostname: my_jenkins
+    container_name: jenkins
+    hostname: jenkins
     image: jenkins_with_dockercli:v1
     build: ./docker_images/jenkins_with_dockercli
     ports:
@@ -38,10 +38,10 @@ services:
     tty: true        # docker run -t
 
   test_model_api:
-    container_name: test_modelapi
-    hostname: test_modelapi
+    container_name: test_model_api
+    hostname: test_model_api
     image: dzigen/test_model_api:v1
-    build: ./docker_images/test_modelapi
+    build: ./docker_images/test_model_api
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     depends_on:

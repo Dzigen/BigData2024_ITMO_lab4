@@ -32,7 +32,7 @@ pipeline {
         stage('Build tests-image') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab1 && docker-compose build test_model_api'
+                sh 'cd BigData2024_ITMO_lab1 && docker-compose build --no-cache test_model_api'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
 
     post {
         always {
-            //sh 'docker stop modelapi 
+            //sh 'docker stop model_api 
             sh 'docker rmi dzigen/model_api:v1 dzigen/base_model_api:v1 dzigen/test_model_api:v1'
             sh 'docker logout'
         }
