@@ -32,7 +32,7 @@ pipeline {
         stage('Test run of ModelAPI-image') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose run model_api'
+                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose run -d model_api'
             }
         }
 
