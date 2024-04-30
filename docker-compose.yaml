@@ -14,7 +14,7 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     volumes: 
-      - ${PWD}/model_api.log:/home/app/src/logfile.log
+      - ${PWD}/logs:/home/logs
 
   jenkins:
     container_name: jenkins

@@ -5,7 +5,7 @@ import functools
 
 FORMATTER = logging.Formatter(
     "%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = os.path.join(os.getcwd(), "logfile.log")
+LOG_FILE = os.path.join(os.getcwd(), "/home/logs/logfile.log")
 
 
 class Logger:
