@@ -5,6 +5,7 @@ services:
     build: ./docker_images/base_modelapi
 
   model_api:
+    container_name: modelapi
     image: dzigen/model_api:v1
     build: .
     ports:
@@ -15,6 +16,7 @@ services:
       - ${PWD}/model_api.log:/home/app/src/logfile.log
 
   jenkins:
+    container_name: jenkins
     image: jenkins_with_dockercli:v1
     build: ./docker_images/jenkins_with_dockercli
     ports:
@@ -28,3 +30,14 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+
+  test_model_api:
+    container_name: test_modelapi
+    image: dzigen/test_model_api:v1
+    build: ./docker_images/test_modelapi
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    networks:
+      - bridge
+    depends_on:
+      - model_api
