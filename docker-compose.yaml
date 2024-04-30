@@ -9,11 +9,10 @@ services:
     build: .
     ports:
       - 4567:4567
-    command: touch model_api.log
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     volumes: 
-      - ./model_api.log:/home/app/src/logfile.log
+      - ${PWD}/model_api.log:/home/app/src/logfile.log
 
   jenkins:
     image: jenkins_with_dockercli:v1

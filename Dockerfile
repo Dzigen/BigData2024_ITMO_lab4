@@ -15,4 +15,4 @@ RUN rm -rf tests
 
 WORKDIR "${APP_DIR}/src/"
 
-CMD ["sh", "-c", "uvicorn api:app --reload --host 0.0.0.0 --port 4567"]
+ENTRYPOINT ["sh", "-c", "uvicorn api:app --reload --host 0.0.0.0 --port 4567"]
