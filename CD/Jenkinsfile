@@ -47,7 +47,7 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop modelapi_cntname' 
+            sh 'docker stop modelapi_cntname && docker rm modelapi_cntname && docker rm test_modelapi_cntname'
             sh 'docker rmi dzigen/model_api:v1 dzigen/base_model_api:v1 dzigen/test_model_api:v1'
             sh 'docker logout'
         }
