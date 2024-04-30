@@ -37,7 +37,5 @@ services:
     build: ./docker_images/test_modelapi
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    networks:
-      - bridge
     depends_on:
       - model_api
