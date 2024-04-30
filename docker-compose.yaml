@@ -5,10 +5,10 @@ services:
     build: ./docker_images/base_model_api
 
   model_api:
-    container_name: model_api
-    hostname: model_api
     image: dzigen/model_api:v1
     build: .
+    container_name: model_api
+    hostname: model_api
     ports:
       - 4567:4567
     stdin_open: true # docker run -i
@@ -17,10 +17,10 @@ services:
       - ${PWD}/logs:/home/logs
 
   jenkins:
-    container_name: jenkins
-    hostname: jenkins
     image: jenkins_with_dockercli:v1
     build: ./docker_images/jenkins_with_dockercli
+    container_name: jenkins
+    hostname: jenkins
     ports:
       - 8080:8080
       - 8090:8090
@@ -36,10 +36,10 @@ services:
     tty: true        # docker run -t
 
   test_model_api:
-    container_name: test_model_api
-    hostname: test_model_api
     image: dzigen/test_model_api:v1
     build: ./docker_images/test_model_api
+    container_name: test_model_api
+    hostname: test_model_api
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     depends_on:
