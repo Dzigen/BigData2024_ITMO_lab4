@@ -2,7 +2,7 @@ version: '3'
 services:
   base_model_api:
     image: dzigen/base_model_api:v1
-    build: ./docker_images/base_modelapi
+    build: ./docker_images/base_model_api
 
   model_api:
     container_name: model_api
