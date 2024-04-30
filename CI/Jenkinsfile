@@ -15,7 +15,7 @@ pipeline {
                 echo "====[STAGE1]===="
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab1.git'"
-                sh 'cd BigData2024_ITMO_lab1 && dvc pull && cd model && ls -la'
+                sh 'cd BigData2024_ITMO_lab1 && dvc pull models/prod_model.pkl && cd model && ls -la'
             }
         }
         
