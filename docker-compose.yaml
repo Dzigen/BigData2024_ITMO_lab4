@@ -14,7 +14,9 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     volumes: 
-      - ./model_api.log:/home/app/src/logfile.log
+      - type: bind
+            source: ./model_api.log
+            target: /home/app/src/logfile.log
 
   jenkins:
     container_name: my_jenkins
