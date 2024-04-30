@@ -47,7 +47,7 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop model_api test_model_api && docker rm model_api test_model_api && docker logout'
+            sh 'docker stop modelapi && docker rm modelapi test_modelapi && docker logout'
         }
     }
 }   
