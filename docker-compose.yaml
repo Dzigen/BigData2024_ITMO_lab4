@@ -6,6 +6,7 @@ services:
 
   model_api:
     container_name: modelapi
+    hostname: modelapi
     image: dzigen/model_api:v1
     build: .
     ports:
@@ -16,11 +17,13 @@ services:
       - ${PWD}/model_api.log:/home/app/src/logfile.log
 
   jenkins:
-    container_name: jenkins
+    container_name: my_jenkins
+    hostname: my_jenkins
     image: jenkins_with_dockercli:v1
     build: ./docker_images/jenkins_with_dockercli
     ports:
       - 8080:8080
+      - 8090:8090
       - 50000:50000
     user: root
     group_add:
@@ -28,11 +31,13 @@ services:
     volumes:
       - /home/dzigen/jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+      - /home/dzigen/.cache/pydrive2fs/:/root/.cache/pydrive2fs/
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
   test_model_api:
     container_name: test_modelapi
+    hostname: test_modelapi
     image: dzigen/test_model_api:v1
     build: ./docker_images/test_modelapi
     stdin_open: true # docker run -i
