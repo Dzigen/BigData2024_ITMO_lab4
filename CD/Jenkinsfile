@@ -39,7 +39,7 @@ pipeline {
         stage('Run func-tests') {
             steps {
                 echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose run test_modelapi'
+                sh 'cd BigData2024_ITMO_lab1 && mkdir logs && docker-compose up test_modelapi'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop modelapi' 
+            sh 'docker stop modelapi_cntname' 
             sh 'docker rmi dzigen/model_api:v1 dzigen/base_model_api:v1 dzigen/test_model_api:v1'
             sh 'docker logout'
         }

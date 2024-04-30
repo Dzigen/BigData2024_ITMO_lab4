@@ -7,7 +7,7 @@ services:
   modelapi:
     image: dzigen/model_api:v1
     build: .
-    container_name: model_api
+    container_name: modelapi_cntname
     hostname: model_api
     ports:
       - 4567:4567
@@ -19,7 +19,7 @@ services:
   jenkins:
     image: jenkins_with_dockercli:v1
     build: ./docker_images/jenkins_with_dockercli
-    container_name: jenkins
+    container_name: jenkins_cntname
     hostname: jenkins
     ports:
       - 8080:8080
@@ -38,7 +38,7 @@ services:
   test_modelapi:
     image: dzigen/test_model_api:v1
     build: ./docker_images/test_model_api
-    container_name: test_model_api
+    container_name: test_modelapi_cntname
     hostname: test_model_api
     stdin_open: true # docker run -i
     tty: true        # docker run -t
