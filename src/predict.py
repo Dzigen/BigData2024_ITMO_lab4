@@ -46,7 +46,10 @@ class Evaluator(BaseUtils):
         Returns:
             List[int]: _description_
         """
-        predictions = self.model.predict(inputs).tolist()
+        
+        predictions = []
+        if len(inputs):
+            predictions = self.model.predict(inputs).tolist()
 
         return predictions
 
