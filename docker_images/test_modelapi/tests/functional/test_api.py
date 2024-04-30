@@ -12,6 +12,8 @@ URL = "http://modelapi:4567/make_predictions/"
 def test_api_handler(body, expected_code, expected_response):
     output = requests.post(URL, json=body)
 
+    print(output.content)
+
     actual_response = json.loads(output.content.decode())
     actual_code = output.status_code
 
