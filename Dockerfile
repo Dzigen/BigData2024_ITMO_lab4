@@ -14,8 +14,7 @@ RUN pytest
 RUN rm -rf tests
 
 WORKDIR "${APP_DIR}/src/"
-RUN touch logfile.log
+RUN touch logfile.log && chmod a+rw logfile.log
 RUN ls -la
-
 
 ENTRYPOINT ["sh", "-c", "uvicorn api:app --reload --host 0.0.0.0 --port 4567"]
