@@ -39,7 +39,7 @@ pipeline {
         stage('Run func-tests') {
             steps {
                 echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab1 && docker-compose run test_model_api'
+                sh 'cd BigData2024_ITMO_lab1 && touch model_api.log && docker-compose run test_model_api'
             }
         }
 
