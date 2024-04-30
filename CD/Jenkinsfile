@@ -48,7 +48,7 @@ pipeline {
     post {
         always {
             //sh 'docker stop modelapi && docker rm modelapi test_modelapi'
-            //sh 'docker rmi dzigen/model_api:v1 dzigen/base_model_api:v1'
+            sh 'docker rmi dzigen/model_api:v1 dzigen/base_model_api:v1 dzigen/test_model_api:v1'
             sh 'docker logout'
         }
     }

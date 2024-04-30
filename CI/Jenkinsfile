@@ -39,7 +39,7 @@ pipeline {
 
     post {
         always {
-            sh 'docekr rmi dzigen/base_model_api:v1'
+            sh 'docker rmi dzigen/base_model_api:v1'
             sh 'docker logout'
         }
     }
