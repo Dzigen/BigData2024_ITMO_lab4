@@ -12,6 +12,7 @@ from src.predict import Evaluator
 from src.train import Trainer, RandomForestConfig
 from src.preprocess import Preparator
 from src.utils import BaseUtils
+from src.mongo import MongoModel
 
 @pytest.fixture
 def preparator_obj():
@@ -29,3 +30,7 @@ def evaluator_obj():
 @pytest.fixture
 def baseutils_obj():
     return BaseUtils()
+
+@pytest.fixture
+def mongo_obj():
+    return MongoModel()

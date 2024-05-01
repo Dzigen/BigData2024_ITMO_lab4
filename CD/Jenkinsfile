@@ -17,8 +17,8 @@ pipeline {
                 echo "====[STAGE1]===="
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab2.git'"
-                sh 'cat ${MODELAPI_ENV} >> BigData2024_ITMO_lab2/modelapi/.env'
-                sh 'cat ${DCOMPOSE_ENV} >> BigData2024_ITMO_lab2/.env'
+                sh 'cat ${MODELAPI_ENV} > BigData2024_ITMO_lab2/modelapi/.env'
+                sh 'cat ${DCOMPOSE_ENV} > BigData2024_ITMO_lab2/.env'
             }
         }
         
@@ -43,6 +43,7 @@ pipeline {
             steps {
                 echo "====[STAGE4]===="
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose up test_modelapi'
+                sh 'docker logs modelapi_cntname'
             }
         }
 
@@ -52,6 +53,7 @@ pipeline {
         always {
             sh 'docker stop modelapi_cntname && docker rm modelapi_cntname && docker rm test_modelapi_cntname'
             sh 'docker logout'
+            cleanWs()
         }
     }
 }   
