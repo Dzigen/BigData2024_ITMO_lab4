@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-dotenv_path = Path('../.env')
+dotenv_path = Path.joinpath(Path(__file__).parent.parent.resolve(), '.env')
+
 load_dotenv(dotenv_path=dotenv_path)
 
 DB_USER_NAME = os.getenv('MONGO_MODELDB_USER_USERNAME') 

@@ -22,26 +22,37 @@ pipeline {
             }
         }
         
-        stage('Pull prod-image and env-image for tests') {
+        stage('Pull prod-image, db-image and env-image for tests') {
             steps {
                 echo "====[STAGE2]===="
                 sh 'docker --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/model_api:v1'
+                sh 'docker pull dzigen/mongodb:v1'
                 sh 'docker pull dzigen/base_model_api:v1'
             }
         }
 
-        stage('Build tests-image') {
+        stage('Run integration-tests') {
+            steps {
+                echo "====[STAGE4]===="
+                sh 'docker-compose up -d modelapi'
+                sh 'docker exec -it modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
+                sh 'docker cp BigData2024_ITMO_lab2/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
+                sh 'docker exec -it modelapi_cntname sh -c "cd .. && pytest"'
+            }
+        }
+
+        stage('Build func test-image') {
             steps {
                 echo "====[STAGE3]===="
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose build --no-cache test_modelapi'
             }
         }
 
-        stage('Run func-tests') {
+        stage('Run functional-tests') {
             steps {
-                echo "====[STAGE4]===="
+                echo "====[STAGE5]===="
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose up test_modelapi'
                 sh 'docker logs modelapi_cntname'
             }
@@ -51,7 +62,9 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop modelapi_cntname && docker rm modelapi_cntname && docker rm test_modelapi_cntname'
+            sh 'docker stop modelapi_cntname mongoui_cntname mongodb_cntname'
+            sh 'docker rm modelapi_cntname mongoui_cntname mongodb_cntname'
+            sh 'docker rm test_modelapi_cntname'
             sh 'docker logout'
             cleanWs()
         }

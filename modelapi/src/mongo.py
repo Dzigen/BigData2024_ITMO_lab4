@@ -1,7 +1,8 @@
 import pymongo
-from settings import DB_USER_NAME, DB_USER_PWD, DB_NAME, TABLE_NAME
 from typing import List, Dict
-from logger import Logger
+
+from src.settings import DB_USER_NAME, DB_USER_PWD, DB_NAME, TABLE_NAME
+from src.logger import Logger
 
 SHOW_LOG = True
 
