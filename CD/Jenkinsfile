@@ -7,6 +7,8 @@ pipeline {
         LANG    = "en_US.UTF-8"
         LANGUAGE = "en_US.UTF-8"
         GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
+        MODELAPI_ENV = credentials('modelapi_env')
+        DCOMPOSE_ENV = credentials('docker_compose_env')
     }
 
     stages {
@@ -15,6 +17,8 @@ pipeline {
                 echo "====[STAGE1]===="
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab2.git'"
+                sh 'cat ${MODELAPI_ENV} >> BigData2024_ITMO_lab2/modelapi/.env'
+                sh 'cat ${DCOMPOSE_ENV} >> BigData2024_ITMO_lab2/.env'
             }
         }
         
