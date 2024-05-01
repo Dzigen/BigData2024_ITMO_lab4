@@ -15,7 +15,9 @@ services:
     tty: true        # docker run -t
     volumes: 
       - ${PWD}/modelapi/logs:/home/logs
-      - ${PWD}/modelapi/.env:/home/app/.env
+      - type: bind
+        source: ${PWD}/modelapi/.env
+        target: /home/app/.env
     depends_on:
       - mongoui
 

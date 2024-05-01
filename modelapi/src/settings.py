@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 dotenv_path = Path.joinpath(Path(__file__).parent.parent.resolve(), '.env')
+print(dotenv_path)
 
 load_dotenv(dotenv_path=dotenv_path)
 
