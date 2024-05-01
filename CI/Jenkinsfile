@@ -18,8 +18,8 @@ pipeline {
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab2.git'"
                 sh 'cd BigData2024_ITMO_lab2/modelapi && dvc pull models/prod_model.pkl'
-                sh 'cat ${MODELAPI_ENV} >> BigData2024_ITMO_lab2/modelapi/.env'
-                sh 'cat ${DCOMPOSE_ENV} >> BigData2024_ITMO_lab2/.env'
+                sh 'cat ${MODELAPI_ENV} > BigData2024_ITMO_lab2/modelapi/.env'
+                sh 'cat ${DCOMPOSE_ENV} > BigData2024_ITMO_lab2/.env'
             }
         }
         
