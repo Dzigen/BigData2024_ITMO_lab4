@@ -14,10 +14,8 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     volumes: 
-      - ${PWD}/modelapi/logs:/home/logs
-      - type: bind
-        source: ${PWD}/modelapi/.env
-        target: /home/app/.env
+      - ./modelapi/logs:/home/logs
+      - ./modelapi/.env:/home/app/.env:ro
     depends_on:
       - mongoui
 

@@ -35,8 +35,14 @@ pipeline {
 
         stage('Run integration-tests') {
             steps {
-                echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi && sleep 5'
+                echo "====[STAGE3]===="
+                // костыль: для того, чтобы создать volume для modelapi-сервиса 
+                // потребуется скопировать .env-файл из jenkins-контейнера на host. 
+                // jenkins имеет доступ только к docker-cli (через volume), через который используется docker на host-машине (не спользуется docker-in-docker).
+                sh 'docker cp jenkins_cntname:/var/jenkins_home/workspace/cd_pipeline/BigData2024_ITMO_lab2/modelapi/.env /var/jenkins_home/workspace/cd_pipeline/BigData2024_ITMO_lab2/modelapi/'
+                
+                // 
+                sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi'
                 sh 'docker exec modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
                 sh 'docker cp BigData2024_ITMO_lab2/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
                 sh 'docker exec modelapi_cntname sh -c "cd .. && pytest"'
@@ -45,7 +51,7 @@ pipeline {
 
         stage('Build func test-image') {
             steps {
-                echo "====[STAGE5]===="
+                echo "====[STAGE4]===="
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose build --no-cache test_modelapi'
             }
         }
@@ -66,7 +72,6 @@ pipeline {
             sh 'docker rm modelapi_cntname mongoui_cntname mongodb_cntname'
             sh 'docker rm test_modelapi_cntname'
             sh 'docker logout'
-            cleanWs()
         }
     }
 }   
