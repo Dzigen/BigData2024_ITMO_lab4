@@ -1,3 +1,5 @@
+db = new Mongo().getDB('modelapi_log');
+
 db.createUser({
     user: 'dzigen',
     pwd: 'password',
@@ -8,7 +10,5 @@ db.createUser({
         }
     ]
 });
-
-db = new Mongo().getDB('modelapi_log');
 
 db.createCollection('saved_requests', {capped: false});

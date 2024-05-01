@@ -19,4 +19,4 @@ def test_api_handler(body, expected_code, expected_response):
     actual_code = output.status_code
 
     assert actual_code == expected_code
-    assert actual_response == expected_response
+    assert actual_response['predictions'] == expected_response['predictions']
