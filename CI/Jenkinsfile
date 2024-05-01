@@ -18,8 +18,8 @@ pipeline {
                 cleanWs()
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab2.git'"
                 sh 'cd BigData2024_ITMO_lab2/modelapi && dvc pull models/prod_model.pkl'
-                sh 'cat ${MODELAPI_ENV}'
-                sh 'cat ${DCOMPOSE_ENV}'
+                sh 'cat ${MODELAPI_ENV} >> cd BigData2024_ITMO_lab2/modelapi/.env'
+                sh 'cat ${DCOMPOSE_ENV} >> cd BigData2024_ITMO_lab2/.env'
             }
         }
         
@@ -52,6 +52,7 @@ pipeline {
         always {
             sh 'docker stop modelapi_cntname && docker rm modelapi_cntname'
             sh 'docker logout'
+            cleanWs()
         }
     }
 }        
