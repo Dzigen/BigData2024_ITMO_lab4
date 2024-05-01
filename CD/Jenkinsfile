@@ -36,16 +36,16 @@ pipeline {
         stage('Run integration-tests') {
             steps {
                 echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi'
-                sh 'docker exec -it modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
+                sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi && sleep 5'
+                sh 'docker exec modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
                 sh 'docker cp BigData2024_ITMO_lab2/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
-                sh 'docker exec -it modelapi_cntname sh -c "cd .. && pytest"'
+                sh 'docker exec modelapi_cntname sh -c "cd .. && pytest"'
             }
         }
 
         stage('Build func test-image') {
             steps {
-                echo "====[STAGE3]===="
+                echo "====[STAGE5]===="
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose build --no-cache test_modelapi'
             }
         }
