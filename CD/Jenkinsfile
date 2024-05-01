@@ -26,6 +26,7 @@ pipeline {
             steps {
                 echo "====[STAGE2]===="
                 sh 'docker --version'
+                sh 'docker-compose --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/model_api:v1'
                 sh 'docker pull dzigen/mongodb:v1'
@@ -36,12 +37,6 @@ pipeline {
         stage('Run integration-tests') {
             steps {
                 echo "====[STAGE3]===="
-                // костыль: для того, чтобы создать volume для modelapi-сервиса 
-                // потребуется скопировать .env-файл из jenkins-контейнера на host. 
-                // jenkins имеет доступ только к docker-cli (через volume), через который используется docker на host-машине (не спользуется docker-in-docker).
-                sh 'docker cp jenkins_cntname:/var/jenkins_home/workspace/cd_pipeline/BigData2024_ITMO_lab2/modelapi/.env /var/jenkins_home/workspace/cd_pipeline/BigData2024_ITMO_lab2/modelapi/'
-                
-                // 
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi'
                 sh 'docker exec modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
                 sh 'docker cp BigData2024_ITMO_lab2/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'

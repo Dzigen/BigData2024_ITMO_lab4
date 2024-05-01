@@ -27,6 +27,7 @@ pipeline {
             steps {
                 echo "====[STAGE2]===="
                 sh 'docker --version'
+                sh 'docker-compose --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
                 sh 'cd BigData2024_ITMO_lab2 && docker-compose build --no-cache modelapi'
