@@ -35,7 +35,6 @@ pipeline {
             steps {
                 echo "====[STAGE3]===="
                 sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
-                sh 'docker exec modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
                 sh 'docker cp BigData2024_ITMO_lab3/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
                 sh 'docker exec modelapi_cntname sh -c "cd .. && pytest"'
             }
