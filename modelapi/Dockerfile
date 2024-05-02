@@ -9,6 +9,8 @@ RUN echo $PYTHONPATH
 COPY src/ src/
 COPY models/ models/
 COPY tests/unit tests/unit
+COPY vault.yaml vault.yaml
+
 RUN mkdir /home/logs
 
 RUN pytest

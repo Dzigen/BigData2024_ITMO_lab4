@@ -1,16 +1,35 @@
 import os 
-from dotenv import load_dotenv
+from ansible_vault import Vault
 from pathlib import Path
+from dataclasses import dataclass
 
-dotenv_path = Path.joinpath(Path(__file__).parent.parent.resolve(), '.env')
-print(dotenv_path)
+SECRET_PATH = Path.joinpath(Path(__file__).parent.parent.resolve(), 'vault.yaml')
 
-load_dotenv(dotenv_path=dotenv_path)
+PASSWORD_PATH = Path.joinpath(Path(__file__).parent.parent.resolve(), '.vault_pass')
+PASSWORD_ENV_NAME = 'MODELAPI_VAULT_PASS'
 
-DB_USER_NAME = os.getenv('MONGO_MODELDB_USER_USERNAME') 
-DB_USER_PWD = os.getenv('MONGO_MODELDB_USER_PASSWORD')
-DB_NAME = os.getenv('MONGO_MODELDB_NAME')
-TABLE_NAME = os.getenv('MONGO_TABLE_NAME')
+@dataclass
+class Secrets:
+    MONGO_MODELDB_USER_USERNAME: str = None
+    MONGO_MODELDB_USER_PASSWORD: str = None
+    MONGO_MODELDB_NAME: str = None
+    MONGO_TABLE_NAME: str = None
+
+    @classmethod
+    def load(cls) -> None:
+        try:
+            vault = Vault(Path(PASSWORD_PATH).read_text())
+        except FileNotFoundError:
+            try:
+                vault = Vault(os.environ[PASSWORD_ENV_NAME])
+            except KeyError:
+                raise AttributeError
+
+        data = vault.load(open(SECRET_PATH).read())
+        return cls(**data)
+
+secrets = Secrets().load()
 
 if __name__ == "__main__":
-    print(DB_USER_NAME, DB_USER_PWD, DB_NAME, TABLE_NAME)
+    print(secrets.MONGO_MODELDB_USER_USERNAME, secrets.MONGO_MODELDB_USER_PASSWORD, 
+          secrets.MONGO_MODELDB_NAME, secrets.MONGO_TABLE_NAME)

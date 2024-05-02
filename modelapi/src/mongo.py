@@ -1,7 +1,7 @@
 import pymongo
 from typing import List, Dict
 
-from src.settings import DB_USER_NAME, DB_USER_PWD, DB_NAME, TABLE_NAME
+from src.settings import secrets
 from src.logger import Logger
 
 SHOW_LOG = True
@@ -11,13 +11,13 @@ class MongoModel:
         logger = Logger(SHOW_LOG)
         self.log = logger.get_logger(__name__)
         self.log.info("Initiating MongoModel-class")
-        self.log.info(f"{DB_USER_NAME} , {DB_USER_PWD} , {DB_NAME}")
 
         self.client = pymongo.MongoClient("mongodb://mongo:27017", 
-                                          username=DB_USER_NAME, password=DB_USER_PWD,
-                                          authSource=DB_NAME)
-        self.log_db = self.client[DB_NAME]
-        self.requests_collection = self.log_db[TABLE_NAME]
+                                          username=secrets.MONGO_MODELDB_USER_USERNAME, 
+                                          password=secrets.MONGO_MODELDB_USER_PASSWORD,
+                                          authSource=secrets.MONGO_MODELDB_NAME)
+        self.log_db = self.client[secrets.MONGO_MODELDB_NAME]
+        self.requests_collection = self.log_db[secrets.MONGO_TABLE_NAME]
 
     @Logger.cls_se_log(info="Insert item to database")
     def insert(self, data: Dict[str,object]) -> pymongo.results.InsertManyResult:
