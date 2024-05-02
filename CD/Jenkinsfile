@@ -9,6 +9,7 @@ pipeline {
         GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
         MODELAPI_ENV = credentials('modelapi_env')
         DCOMPOSE_ENV = credentials('docker_compose_env')
+        PATH = "/var/lib/jenkins/.local/bin:${env.PATH}"
     }
 
     stages {
