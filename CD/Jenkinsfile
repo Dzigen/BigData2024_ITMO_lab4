@@ -7,8 +7,7 @@ pipeline {
         LANG    = "en_US.UTF-8"
         LANGUAGE = "en_US.UTF-8"
         GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
-        MODELAPI_ENV = credentials('modelapi_env')
-        DCOMPOSE_ENV = credentials('docker_compose_env')
+        DCOMPOSE_VAULT_PASS = credentials('DOCKERCOMPOSE_VAULT_PASS')
         PATH = "/var/lib/jenkins/.local/bin:${env.PATH}"
     }
 
@@ -17,17 +16,14 @@ pipeline {
             steps{
                 echo "====[STAGE1]===="
                 cleanWs()
-                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab2.git'"
-                sh 'cat ${MODELAPI_ENV} > BigData2024_ITMO_lab2/modelapi/.env'
-                sh 'cat ${DCOMPOSE_ENV} > BigData2024_ITMO_lab2/.env'
+                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab3.git'"
+                sh 'docker --version && docker-compose --version && dvc --version && ansible --version && ansible-vault --version'
             }
         }
         
         stage('Pull prod-image, db-image and env-image for tests') {
             steps {
                 echo "====[STAGE2]===="
-                sh 'docker --version'
-                sh 'docker-compose --version'
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/model_api:v1'
                 sh 'docker pull dzigen/mongodb:v1'
@@ -38,9 +34,9 @@ pipeline {
         stage('Run integration-tests') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab2 && docker-compose up -d modelapi'
+                sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
                 sh 'docker exec modelapi_cntname sh -c "mkdir -p /home/app/tests/integral"'
-                sh 'docker cp BigData2024_ITMO_lab2/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
+                sh 'docker cp BigData2024_ITMO_lab3/modelapi/tests/itegration/ modelapi_cntname:/home/app/tests/integration/'
                 sh 'docker exec modelapi_cntname sh -c "cd .. && pytest"'
             }
         }
@@ -48,14 +44,14 @@ pipeline {
         stage('Build func test-image') {
             steps {
                 echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab2 && docker-compose build --no-cache test_modelapi'
+                sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_test_modelapi"'
             }
         }
 
         stage('Run functional-tests') {
             steps {
                 echo "====[STAGE5]===="
-                sh 'cd BigData2024_ITMO_lab2 && docker-compose up test_modelapi'
+                sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_test_modelapi"'
                 sh 'docker logs modelapi_cntname'
             }
         }
