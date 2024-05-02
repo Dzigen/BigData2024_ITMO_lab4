@@ -31,14 +31,14 @@ pipeline {
                 echo "====[STAGE2]===="
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'cd BigData2024_ITMO_lab3 && ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_modelapi"'
+                sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_modelapi"'
             }
         }
 
         stage('Test run of ModelAPI-image') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab3/ && ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
+                sh 'cd BigData2024_ITMO_lab3/ && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
             }
         }
 
