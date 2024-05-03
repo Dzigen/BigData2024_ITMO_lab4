@@ -19,7 +19,7 @@ pipeline {
                 sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab4.git'"
                 sh 'docker --version && docker-compose --version && dvc --version && ansible --version && ansible-vault --version'
                 sh 'cd BigData2024_ITMO_lab4/modelapi && dvc pull models/prod_model.pkl'
-                sh 'mkdir BigData2024_ITMO_lab4/modelapi/logs BigData2024_ITMO_lab4/modelapi/logs/kafka_db_connector'
+                sh 'mkdir BigData2024_ITMO_lab4/modelapi/logs BigData2024_ITMO_lab4/kafka_db_connector/logs'
             }
         }
         
