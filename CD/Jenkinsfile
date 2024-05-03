@@ -53,6 +53,7 @@ pipeline {
                 echo "====[STAGE5]===="
                 sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_test_modelapi"'
                 sh 'docker logs modelapi_cntname'
+                sh 'docker logs kafkadb_connector'
             }
         }
 
