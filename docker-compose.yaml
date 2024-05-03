@@ -22,26 +22,6 @@ services:
     depends_on:
       - kafkadb_connector
 
-  # Jenkins server
-  jenkins:
-    image: jenkins_with_dockercli:v1
-    build: ./jenkins_with_dockercli
-    container_name: jenkins_cntname
-    hostname: jenkins
-    ports:
-      - 8080:8080
-      - 8090:8090
-      - 50000:50000
-    user: root
-    group_add:
-      - 0
-    volumes:
-      - /home/dzigen/jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /home/dzigen/.cache/pydrive2fs/:/root/.cache/pydrive2fs/
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-
   # Environment for functional testing
   test_modelapi:
     image: dzigen/test_model_api:v1
