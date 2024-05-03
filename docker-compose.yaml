@@ -1,9 +1,11 @@
 version: '3'
 services:
+  #
   base_modelapi:
     image: dzigen/base_model_api:v1
     build: ./base_model_api
 
+  #
   modelapi:
     image: dzigen/model_api:v1
     build: ./modelapi
@@ -17,9 +19,8 @@ services:
       - MODELAPI_VAULT_PASS
     volumes: 
       - ./modelapi/logs:/home/logs
-      - ./modelapi/.env:/home/app/.env:ro
     depends_on:
-      - mongoui
+      - kafkadb_connector
 
   # Jenkins server
   jenkins:
@@ -83,3 +84,48 @@ services:
       - ME_CONFIG_MONGODB_SERVER
     depends_on:
       - mongodb
+
+  #
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT
+      ZOOKEEPER_TICK_TIME
+    ports:
+      - 22181:2181
+  
+  #
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      - KAFKA_BROKER_ID
+      - KAFKA_ZOOKEEPER_CONNECT
+      - KAFKA_ADVERTISED_LISTENERS
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+      - KAFKA_INTER_BROKER_LISTENER_NAME
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+
+  #
+  kafkadb_connector:
+    iamge: dzigen/kafkadb_connector:v1
+    build: ./kafka_db_connector
+    depends_on:
+      - mongoui
+      - kafka
+    container_name: kafkadb_connector_cntname
+    hostname: kafkadb_connector
+    ports:
+      - 29092:29092
+      - 27017:27017
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    environment:
+      - KAFKADB_CONN_VAULT_PASS
+    volumes: 
+      - ./kafka_db_connector/logs:/home/logs
+    depends_on:
+      - kafkadb_connector
