@@ -3,8 +3,8 @@ from typing import List
 from pydantic import BaseModel
 
 from src.predict import Evaluator
-from src.mongo import MongoModel
 from src.logger import Logger
+from src.producer import MyProducer, CONFIG, KAFKA_TOPIC
 
 PROD_MODEL_PATH = '../models/prod_model.pkl'
 SHOW_LOG = True
@@ -24,14 +24,11 @@ async def predict(body: Body):
     predictions = evaluator.predict(body.inputs)
 
     log.info("Logging prediction in database...")
-    db = MongoModel()
-    log_item = {'inputs': body.inputs,'predictions': predictions}
-    log.info(f"log_item: {log_item}")
-    db_output = db.insert(log_item)
-    db.client.close()
-    log.info(f"db response: {db_output}")
+    log_data = {'predictions': predictions, 'inputs': body.inputs}
+    kafka_producer = MyProducer(CONFIG)
+    kafka_producer.send_message(KAFKA_TOPIC, log_data)
 
-    response = {'predictions': predictions, 'log_id': str(db_output.inserted_id)}
+    response = {'predictions': predictions}
     log.info(f"modelapi response: {response}")
     log.info("Done!")
 

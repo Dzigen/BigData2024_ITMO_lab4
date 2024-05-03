@@ -16,8 +16,8 @@ pipeline {
             steps{
                 echo "====[STAGE1]===="
                 cleanWs()
-                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab3.git'"
-                sh 'cd BigData2024_ITMO_lab3/modelapi && dvc pull models/prod_model.pkl'
+                sh "ssh-agent bash -c 'ssh-add $GITHUB_SSH_CREDS; git clone -b main git@github.com:Dzigen/BigData2024_ITMO_lab4.git'"
+                sh 'cd BigData2024_ITMO_lab4/modelapi && dvc pull models/prod_model.pkl'
                 sh 'docker --version'
                 sh 'docker-compose --version'
                 sh 'dvc --version'
@@ -31,21 +31,29 @@ pipeline {
                 echo "====[STAGE2]===="
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'cd BigData2024_ITMO_lab3 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_modelapi"'
             }
         }
 
-        stage('Test run of ModelAPI-image') {
+        stage('Building Consumer-image') {
+            steps {
+                echo "====[STAGE2]===="
+                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_kafkadb"'
+            }
+        }
+
+        stage('Test run of API-service') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab3/ && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4/ && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
             }
         }
 
-        stage('Push ModelAPI-image to DockerHub') {
+        stage('Push ModelAPI-image and Consumer-image to DockerHub') {
             steps {
                 echo "====[STAGE4]===="
                 sh 'docker push dzigen/model_api:v1'
+                sh 'docker push dzigen/kafkadb_connector:v1'
             }
         }
     }
@@ -53,6 +61,9 @@ pipeline {
     post {
         always {
             sh 'docker stop modelapi_cntname && docker rm modelapi_cntname'
+            sh 'docker stop kafkadb_conn_cntname && docker rm kafkadb_conn_cntname'
+            sh 'docker stop kafka_cntname && docker rm kafka_cntname'
+            sh 'docker stop zookeeper_cntname && docker rm zookeeper_cntname'
             sh 'docker logout'
             cleanWs()
         }

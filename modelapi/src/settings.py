@@ -10,10 +10,6 @@ PASSWORD_ENV_NAME = 'MODELAPI_VAULT_PASS'
 
 @dataclass
 class Secrets:
-    MONGO_MODELDB_USER_USERNAME: str = None
-    MONGO_MODELDB_USER_PASSWORD: str = None
-    MONGO_MODELDB_NAME: str = None
-    MONGO_TABLE_NAME: str = None
 
     @classmethod
     def load(cls) -> None:
@@ -31,5 +27,4 @@ class Secrets:
 secrets = Secrets().load()
 
 if __name__ == "__main__":
-    print(secrets.MONGO_MODELDB_USER_USERNAME, secrets.MONGO_MODELDB_USER_PASSWORD, 
-          secrets.MONGO_MODELDB_NAME, secrets.MONGO_TABLE_NAME)
+    print(secrets)

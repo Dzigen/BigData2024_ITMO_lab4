@@ -8,7 +8,7 @@ sys.path.insert(0, ROOT_DIR)
 
 print(sys.path)
 
-from src.mongo import MongoModel
+from kafka_db_connector.src.mongo import MongoModel
 
 @pytest.fixture
 def mongo_obj():
