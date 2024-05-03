@@ -60,8 +60,8 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop modelapi_cntname mongoui_cntname mongodb_cntname'
-            sh 'docker rm modelapi_cntname mongoui_cntname mongodb_cntname'
+            sh 'docker stop modelapi_cntname mongoui_cntname mongodb_cntname kafkadb_connector'
+            sh 'docker rm modelapi_cntname mongoui_cntname mongodb_cntname kafkadb_connector'
             sh 'docker rm test_modelapi_cntname'
             sh 'docker logout'
         }
