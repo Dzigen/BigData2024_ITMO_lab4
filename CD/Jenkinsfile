@@ -42,14 +42,14 @@ pipeline {
         stage('Build func test-image') {
             steps {
                 echo "====[STAGE4]===="
-                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_test_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_test_modelapi"'
             }
         }
 
         stage('Run functional-tests') {
             steps {
                 echo "====[STAGE5]===="
-                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -vvv -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_test_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_test_modelapi"'
                 sh 'docker logs modelapi_cntname'
             }
         }
