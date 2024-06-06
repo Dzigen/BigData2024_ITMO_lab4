@@ -1,14 +1,14 @@
-db = new Mongo().getDB('modelapi_log');
+db = new Mongo().getDB(process.env.MONGO_MODELDB_NAME);
 
 db.createUser({
-    user: 'dzigen',
-    pwd: 'password',
+    user: process.env.MONGO_MODELDB_USER_USERNAME,
+    pwd: process.env.MONGO_MODELDB_USER_PASSWORD,
     roles: [
         {
             role: 'readWrite',
-            db: 'modelapi_log'
+            db: process.env.MONGO_MODELDB_NAME
         }
     ]
 });
 
-db.createCollection('saved_requests', {capped: false});
+db.createCollection(process.env.MONGO_TABLE_NAME, {capped: false});
