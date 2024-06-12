@@ -1,17 +1,18 @@
 FROM dzigen/base_model_api:v1
 
 ARG APP_DIR=/home/app
+ARG LOG_DIR=/home/logs
 ARG APP_PORT=4567
 
 ENV PYTHONPATH "${PYTHONPATH}:${APP_DIR}"
 RUN echo $PYTHONPATH
+RUN mkdir "${LOG_DIR}"
 
+WORKDIR "${APP_DIR}"
 COPY src/ src/
 COPY models/ models/
 COPY tests/unit tests/unit
 COPY vault.yaml vault.yaml
-
-RUN mkdir /home/logs
 
 RUN pytest
 RUN rm -rf tests

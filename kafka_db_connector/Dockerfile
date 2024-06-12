@@ -5,11 +5,12 @@ ARG APP_DIR=/home/app
 ENV PYTHONPATH "${PYTHONPATH}:${APP_DIR}"
 RUN echo $PYTHONPATH
 
-COPY src/ src/
-#COPY tests/unit tests/unit
-COPY vault.yaml vault.yaml
-
 RUN mkdir /home/logs
+
+WORKDIR "${APP_DIR}"
+COPY src/ src/
+COPY tests/unit tests/unit
+COPY vault.yaml vault.yaml
 
 #RUN pytest
 #RUN rm -rf tests

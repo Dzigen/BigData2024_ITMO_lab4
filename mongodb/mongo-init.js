@@ -1,12 +1,12 @@
-db = new Mongo().getDB(process.env.MONGO_MODELDB_NAME);
+db = new Mongo().getDB(process.env.MONGO_DB_NAME);
 
 db.createUser({
-    user: process.env.MONGO_MODELDB_USER_USERNAME,
-    pwd: process.env.MONGO_MODELDB_USER_PASSWORD,
+    user: process.env.MONGO_USER_NAME,
+    pwd: process.env.MONGO_USER_PWD,
     roles: [
         {
             role: 'readWrite',
-            db: process.env.MONGO_MODELDB_NAME
+            db: process.env.MONGO_DB_NAME
         }
     ]
 });

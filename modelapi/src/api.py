@@ -4,7 +4,8 @@ from pydantic import BaseModel
 
 from src.predict import Evaluator
 from src.logger import Logger
-from src.producer import MyProducer, CONFIG, KAFKA_TOPIC
+from src.kafka_producer import KafkaModel
+from src.settings import secrets
 
 PROD_MODEL_PATH = '../models/prod_model.pkl'
 SHOW_LOG = True
@@ -19,17 +20,21 @@ app = FastAPI()
 async def predict(body: Body):
     log = logger.get_logger(__name__)
 
-    log.info("Strat label-preditions...")
+    log.info("Start predict labels by model...")
     evaluator = Evaluator(PROD_MODEL_PATH)
     predictions = evaluator.predict(body.inputs)
-
-    log.info("Logging prediction in database...")
-    log_data = {'predictions': predictions, 'inputs': body.inputs}
-    kafka_producer = MyProducer(CONFIG)
-    kafka_producer.send_message(KAFKA_TOPIC, log_data)
-
     response = {'predictions': predictions}
+
+    log.info("Start logging predictions in database...")
+    log_data = {'predictions': predictions, 'inputs': body.inputs}
+    config = {'topic': secrets.KAFKA_TOPIC_NAME,
+            'server': secrets.KAFKA_BOOTSTRAP_SERVER,
+            'version': tuple(secrets.KAFKA_VERSION)}
+    kafka = KafkaModel(log, config)
+    kafka.init_producer("python-producer")
+    kafka.send_message(log_data)
+
     log.info(f"modelapi response: {response}")
-    log.info("Done!")
+    log.info("Request handled successfully!")
 
     return response

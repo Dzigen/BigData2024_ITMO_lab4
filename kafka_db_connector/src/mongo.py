@@ -13,10 +13,10 @@ class MongoModel:
         self.log.info("Initiating MongoModel-class")
 
         self.client = pymongo.MongoClient("mongodb://mongo:27017", 
-                                          username=secrets.MONGO_MODELDB_USER_USERNAME, 
-                                          password=secrets.MONGO_MODELDB_USER_PASSWORD,
-                                          authSource=secrets.MONGO_MODELDB_NAME)
-        self.log_db = self.client[secrets.MONGO_MODELDB_NAME]
+                                          username=secrets.MONGO_USER_NAME, 
+                                          password=secrets.MONGO_USER_PWD,
+                                          authSource=secrets.MONGO_DB_NAME)
+        self.log_db = self.client[secrets.MONGO_DB_NAME]
         self.requests_collection = self.log_db[secrets.MONGO_TABLE_NAME]
 
     @Logger.cls_se_log(info="Insert item to database")

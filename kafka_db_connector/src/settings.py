@@ -10,10 +10,15 @@ PASSWORD_ENV_NAME = 'KAFKADB_CONN_VAULT_PASS'
 
 @dataclass
 class Secrets:
-    MONGO_MODELDB_USER_USERNAME: str = None
-    MONGO_MODELDB_USER_PASSWORD: str = None
-    MONGO_MODELDB_NAME: str = None
+    MONGO_USER_NAME: str = None
+    MONGO_USER_PWD: str = None
+    MONGO_DB_NAME: str = None
     MONGO_TABLE_NAME: str = None
+    KAFKA_TOPIC_NAME: str = None
+    KAFKA_PARTITIONS_COUNT: int = None
+    KAFKA_REPLICATION_COUNT: int = None
+    KAFKA_BOOTSTRAP_SERVER: str = None
+    KAFKA_VERSION: tuple = None
 
     @classmethod
     def load(cls) -> None:

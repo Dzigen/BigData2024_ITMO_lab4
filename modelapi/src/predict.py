@@ -35,6 +35,7 @@ class Evaluator(BaseUtils):
     @Logger.cls_se_log(info="Load model")
     def load_model(self, model_path):
         self.model = joblib.load(model_path)
+        self.model.n_jobs = 1
 
     @Logger.cls_se_log(info="Predicting labels by trained model")
     def predict(self, inputs: List[List[float]]) -> List[int]:

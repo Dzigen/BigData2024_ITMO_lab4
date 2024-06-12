@@ -3,25 +3,28 @@ from ansible_vault import Vault
 from pathlib import Path
 from dataclasses import dataclass
 
-SECRET_PATH = Path.joinpath(Path(__file__).parent.parent.resolve(), 'vault.yaml')
+SECRETS_FILE = Path.joinpath(Path(__file__).parent.parent.resolve(), 'vault.yaml')
 
-PASSWORD_PATH = Path.joinpath(Path(__file__).parent.parent.resolve(), '.vault_pass')
-PASSWORD_ENV_NAME = 'MODELAPI_VAULT_PASS'
+PWD_FILE = Path.joinpath(Path(__file__).parent.parent.resolve(), '.vault_pass')
+PWD_ENV_VAR = 'MODELAPI_VAULT_PASS'
 
 @dataclass
 class Secrets:
+    KAFKA_TOPIC_NAME: str = None
+    KAFKA_BOOTSTRAP_SERVER: str = None
+    KAFKA_VERSION: tuple = None
 
     @classmethod
     def load(cls) -> None:
         try:
-            vault = Vault(Path(PASSWORD_PATH).read_text())
+            vault = Vault(Path(PWD_FILE).read_text())
         except FileNotFoundError:
             try:
-                vault = Vault(os.environ[PASSWORD_ENV_NAME])
+                vault = Vault(os.environ[PWD_ENV_VAR])
             except KeyError:
                 raise AttributeError
 
-        data = vault.load(open(SECRET_PATH).read())
+        data = vault.load(open(SECRETS_FILE).read())
         return cls(**data)
 
 secrets = Secrets().load()
