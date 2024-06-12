@@ -20,6 +20,7 @@ pipeline {
                 sh 'cd BigData2024_ITMO_lab4/modelapi && dvc pull models/prod_model.pkl'
                 sh 'mkdir BigData2024_ITMO_lab4/modelapi/logs BigData2024_ITMO_lab4/kafka_db_connector/logs/'
                 sh 'docker --version && docker-compose --version && dvc --version && ansible --version && ansible-vault --version'
+                sh 'cd BigData2024_ITMO_lab4 && cat $COMPOSE_SECRETS > .env'
             }
         }
         
@@ -28,7 +29,6 @@ pipeline {
                 echo "====[STAGE2]===="
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'cd BigData2024_ITMO_lab4 && cat $COMPOSE_SECRETS > .env'
                 sh 'cd BigData2024_ITMO_lab4 && docker-compose build --no-cache modelapi'
             }
         }
@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Test run of ModelAPI-service') {
+        stage('Test run of ModelAPI-container') {
             steps {
                 echo "====[STAGE3]===="
                 sh 'cd BigData2024_ITMO_lab4/ && docker-compose up -d modelapi'
@@ -58,11 +58,9 @@ pipeline {
 
     post {
         always {
-            sh 'docker stop modelapi_cntname && docker rm modelapi_cntname'
-            sh 'docker stop kafkadb_conn_cntname && docker rm kafkadb_conn_cntname'
-            sh 'docker stop kafka_cntname && docker rm kafka_cntname'
-            sh 'docker stop zookeeper_cntname && docker rm zookeeper_cntname'
-            sh 'docker stop mongodb_cntname && docker rm mongodb_cntname'
+            sh 'rm ./BigData2024_ITMO_lab4/.env'
+            sh 'docker stop modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongodb_cntname'
+            sh 'docker rm modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongodb_cntname'
             sh 'docker logout'
             cleanWs()
         }
