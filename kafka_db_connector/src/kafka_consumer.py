@@ -52,4 +52,5 @@ class KafkaModel:
         self.consumer = KafkaConsumer(
             self.config['topic'], group_id=g_id,
             bootstrap_servers=self.config['server'],
-            api_version=self.config['version'])
+            api_version=self.config['version'], 
+            auto_offset_reset='earliest')

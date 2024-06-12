@@ -27,6 +27,10 @@ kafka.init_schema("shema-init")
 
 app = FastAPI()
 
+@app.head("/")
+async def read_root():
+    return {"response": "Hello from ModelAPI-container"}
+
 @app.post("/make_predictions/")
 async def predict(body: Body):
     log.info("Start predict labels by model...")
