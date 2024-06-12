@@ -49,8 +49,8 @@ pipeline {
     post {
         always {
             sh 'rm ./BigData2024_ITMO_lab4/.env'
-            sh 'docker stop modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongodb_cntname test_modelapi_cntname'
-            sh 'docker rm modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongodb_cntname test_modelapi_cntname'
+            sh 'docker stop modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongoui_cntname mongodb_cntname test_modelapi_cntname'
+            sh 'docker rm modelapi_cntname kafkadb_conn_cntname kafka_cntname zookeeper_cntname mongoui_cntname mongodb_cntname test_modelapi_cntname'
             sh 'docker logout'
         }
     }
