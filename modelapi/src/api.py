@@ -14,12 +14,21 @@ class Body(BaseModel):
     inputs: List[List[float]]
 
 logger = Logger(SHOW_LOG)        
+log = logger.get_logger(__name__)
+
+config = {'topic': secrets.KAFKA_TOPIC_NAME,
+        'partitions': secrets.KAFKA_PARTITIONS_COUNT,
+        'replications': secrets.KAFKA_REPLICATION_COUNT,
+        'server': secrets.KAFKA_BOOTSTRAP_SERVER,
+        'version': tuple(secrets.KAFKA_VERSION)}
+kafka = KafkaModel(log, config)
+kafka.init_schema("shema-init")
+
+
 app = FastAPI()
 
 @app.post("/make_predictions/")
 async def predict(body: Body):
-    log = logger.get_logger(__name__)
-
     log.info("Start predict labels by model...")
     evaluator = Evaluator(PROD_MODEL_PATH)
     predictions = evaluator.predict(body.inputs)
@@ -27,12 +36,7 @@ async def predict(body: Body):
 
     log.info("Start logging predictions in database...")
     log_data = {'predictions': predictions, 'inputs': body.inputs}
-    config = {'topic': secrets.KAFKA_TOPIC_NAME,
-            'server': secrets.KAFKA_BOOTSTRAP_SERVER,
-            'version': tuple(secrets.KAFKA_VERSION)}
-    kafka = KafkaModel(log, config)
-    kafka.init_schema("shema-init")
-    kafka.init_producer("python-producer")
+    kafka.init_producer()
     kafka.send_message(log_data)
 
     log.info(f"modelapi response: {response}")

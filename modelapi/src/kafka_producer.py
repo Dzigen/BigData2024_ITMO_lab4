@@ -12,10 +12,10 @@ class KafkaModel:
         self.log = log
 
     @Logger.cls_se_log(info="Initializing kafka-producer")
-    def init_producer(self, c_id):
+    def init_producer(self):
         self.producer = KafkaProducer(
             bootstrap_servers=self.config['server'],
-            client_id=c_id, api_version=self.config['version'])
+            api_version=self.config['version'])
 
     @Logger.cls_se_log(info="Serializing data from json to dump")
     def serialize_data(self, data):
@@ -26,6 +26,7 @@ class KafkaModel:
         data_dump = self.serialize_data(data)
         self.producer.send(self.config['topic'], data_dump)
         self.producer.flush()
+        self.producer.close()
 
     @Logger.cls_se_log(info="Initializing kafka-schema")
     def init_schema(self, id):

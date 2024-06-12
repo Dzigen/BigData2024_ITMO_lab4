@@ -13,6 +13,8 @@ class Secrets:
     KAFKA_TOPIC_NAME: str = None
     KAFKA_BOOTSTRAP_SERVER: str = None
     KAFKA_VERSION: tuple = None
+    KAFKA_PARTITIONS_COUNT: int = None
+    KAFKA_REPLICATION_COUNT: int = None
 
     @classmethod
     def load(cls) -> None:

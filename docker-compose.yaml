@@ -90,6 +90,7 @@ services:
       - KAFKA_LISTENERS
       - KAFKA_INTER_BROKER_LISTENER_NAME
       - KAFKA_ZOOKEEPER_CONNECT
+      - AUTO_CREATE_TOPICS
     depends_on:
       - zookeeper
 
