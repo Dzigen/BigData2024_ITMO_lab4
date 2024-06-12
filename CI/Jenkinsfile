@@ -9,6 +9,7 @@ pipeline {
         GITHUB_SSH_CREDS=credentials('github_bigdata2024_itmo')
         DCOMPOSE_VAULT_PASS = credentials('DOCKERCOMPOSE_VAULT_PASS')
         PATH = "/var/lib/jenkins/.local/bin:${env.PATH}"
+        COMPOSE_SECRETS = credentials('COMPOSE_SECRETS')
     }
 
     stages {
@@ -28,25 +29,26 @@ pipeline {
                 echo "====[STAGE2]===="
                 sh 'echo  $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
                 sh 'docker pull dzigen/base_model_api:v1'
-                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4 && cat $COMPOSE_SECRETS > .env'
+                sh 'cd BigData2024_ITMO_lab4 && docker-compose build --no-cache modelapi'
             }
         }
 
-        stage('Building Consumer-image') {
+        stage('Building Connector-image') {
             steps {
                 echo "====[STAGE2]===="
-                sh 'cd BigData2024_ITMO_lab4 && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "build_kafkadb"'
+                sh 'cd BigData2024_ITMO_lab4 && docker-compose build --no-cache kafkadb_connector'
             }
         }
 
-        stage('Test run of API-service') {
+        stage('Test run of ModelAPI-service') {
             steps {
                 echo "====[STAGE3]===="
-                sh 'cd BigData2024_ITMO_lab4/ && echo $DCOMPOSE_VAULT_PASS | ansible-playbook -v -e @vault.yaml --ask-vault-pass secret_playbook.yaml --tags "up_modelapi"'
+                sh 'cd BigData2024_ITMO_lab4/ && docker-compose up -d modelapi'
             }
         }
 
-        stage('Push ModelAPI-image and Consumer-image to DockerHub') {
+        stage('Push ModelAPI- and Connector-images to DockerHub') {
             steps {
                 echo "====[STAGE4]===="
                 sh 'docker push dzigen/model_api:v1'
@@ -61,6 +63,7 @@ pipeline {
             sh 'docker stop kafkadb_conn_cntname && docker rm kafkadb_conn_cntname'
             sh 'docker stop kafka_cntname && docker rm kafka_cntname'
             sh 'docker stop zookeeper_cntname && docker rm zookeeper_cntname'
+            sh 'docker stop mongodb_cntname && docker rm mongodb_cntname'
             sh 'docker logout'
             cleanWs()
         }
