@@ -40,7 +40,7 @@ class KafkaModel:
                     api_version=self.config['version'])
                 connected = True
                 break
-            except NoBrokersAvailable:
+            except (NoBrokersAvailable, AssertionError) as e:
                 time.sleep(2)
         if not connected:
             raise NoBrokersAvailable
