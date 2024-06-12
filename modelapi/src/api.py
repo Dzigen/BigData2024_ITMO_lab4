@@ -31,6 +31,7 @@ async def predict(body: Body):
             'server': secrets.KAFKA_BOOTSTRAP_SERVER,
             'version': tuple(secrets.KAFKA_VERSION)}
     kafka = KafkaModel(log, config)
+    kafka.init_schema("shema-init")
     kafka.init_producer("python-producer")
     kafka.send_message(log_data)
 

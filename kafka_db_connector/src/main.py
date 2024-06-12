@@ -21,7 +21,6 @@ if __name__ == "__main__":
     kafka = KafkaModel(log, config)
 
     #
-    kafka.init_schema("shema-init")
     kafka.init_consumer("python-consumer", 'mygroup')
 
     log.info("Start waiting for new messages...")
