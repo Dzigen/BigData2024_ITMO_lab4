@@ -9,11 +9,7 @@ RUN mkdir /home/logs
 
 WORKDIR "${APP_DIR}"
 COPY src/ src/
-COPY tests/unit tests/unit
 COPY vault.yaml vault.yaml
-
-#RUN pytest
-#RUN rm -rf tests
 
 WORKDIR "${APP_DIR}/src/"
 
