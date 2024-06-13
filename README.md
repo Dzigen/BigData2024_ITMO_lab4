@@ -1,4 +1,4 @@
-# BigData2024_ITMO_lab1
+# BigData2024_ITMO
 
 Реализованный конвейер передачи данных между запускаемыми контейнерами (названия контейнеров соответствуют названиям run-директив в docker-compose.yaml):
 * (modelapi) -> (kafka) -> (kafkadb_connector) -> (mongodb)
