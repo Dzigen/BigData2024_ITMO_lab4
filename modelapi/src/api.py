@@ -30,6 +30,9 @@ async def read_root():
 
 @app.post("/make_predictions/")
 async def predict(body: Body):
+
+    log.info(body)
+
     log.info("Start predict labels by model...")
     evaluator = Evaluator(PROD_MODEL_PATH)
     predictions = evaluator.predict(body.inputs)
