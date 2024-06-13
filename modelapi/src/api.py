@@ -17,13 +17,10 @@ logger = Logger(SHOW_LOG)
 log = logger.get_logger(__name__)
 
 config = {'topic': secrets.KAFKA_TOPIC_NAME,
-        'partitions': secrets.KAFKA_PARTITIONS_COUNT,
-        'replications': secrets.KAFKA_REPLICATION_COUNT,
         'server': secrets.KAFKA_BOOTSTRAP_SERVER,
         'version': tuple(secrets.KAFKA_VERSION)}
 kafka = KafkaModel(log, config)
-kafka.init_schema("shema-init")
-
+kafka.wait_topic_creation()
 
 app = FastAPI()
 

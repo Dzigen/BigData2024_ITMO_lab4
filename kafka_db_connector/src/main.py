@@ -1,5 +1,6 @@
 from kafka.errors import KafkaError
 import json
+import time
 
 from src.logger import Logger
 from src.mongo import MongoModel
@@ -13,26 +14,25 @@ if __name__ == "__main__":
     log = logger.get_logger(__name__)
 
     #
-    config = {'topic': secrets.KAFKA_TOPIC_NAME,
+    config = {
+        'topic': secrets.KAFKA_TOPIC_NAME,
+        'partitions': secrets.KAFKA_PARTITIONS_COUNT,
+        'replications': secrets.KAFKA_REPLICATION_COUNT,
         'server': secrets.KAFKA_BOOTSTRAP_SERVER,
         'version': tuple(secrets.KAFKA_VERSION)}
     kafka = KafkaModel(log, config)
+    kafka.init_schema()
+    kafka.init_consumer()
 
-    #
-    kafka.init_consumer("python-consumer", 'mygroup')
+    log.info("Start waiting for new messages")
+    for message in kafka.consumer:
+        data = json.loads(message.value.decode('utf-8'))
+        log.info(f"Received message: {data}")
+        
+        log.info("Start logging predictions in database...")
+        db = MongoModel()
+        db_output = db.insert(data)
+        db.client.close()
+        log.info(f"db response: {db_output}")
 
-    log.info("Start waiting for new messages...")
-    try:
-        for message in kafka.consumer:
-            data = json.loads(message.value.decode('utf-8'))
-            log.info(f"Received message: {data}")
-            
-            log.info("Start logging predictions in database...")
-            db = MongoModel()
-            db_output = db.insert(data)
-            db.client.close()
-            log.info(f"db response: {db_output}")
-            
-    except KafkaError as e:
-        log.error(str(e))
-        kafka.consumer.close()
+    kafka.consumer.close()
